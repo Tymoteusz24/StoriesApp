@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		70C0AB672EA8BF48004951FA /* Logger in Frameworks */ = {isa = PBXBuildFile; productRef = 70C0AB662EA8BF48004951FA /* Logger */; };
+		70C0AB6B2EA8C444004951FA /* Helpers in Frameworks */ = {isa = PBXBuildFile; productRef = 70C0AB6A2EA8C444004951FA /* Helpers */; };
+		70C0AB6D2EA8C444004951FA /* Networking in Frameworks */ = {isa = PBXBuildFile; productRef = 70C0AB6C2EA8C444004951FA /* Networking */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +41,7 @@
 			membershipExceptions = (
 				Foundation/Helpers,
 				Foundation/Logger,
+				Foundation/Networking,
 			);
 			target = 70C0AB322EA8B75C004951FA /* TheDatingApp */;
 		};
@@ -70,6 +73,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70C0AB6D2EA8C444004951FA /* Networking in Frameworks */,
+				70C0AB6B2EA8C444004951FA /* Helpers in Frameworks */,
 				70C0AB672EA8BF48004951FA /* Logger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -140,6 +145,8 @@
 			name = TheDatingApp;
 			packageProductDependencies = (
 				70C0AB662EA8BF48004951FA /* Logger */,
+				70C0AB6A2EA8C444004951FA /* Helpers */,
+				70C0AB6C2EA8C444004951FA /* Networking */,
 			);
 			productName = TheDatingApp;
 			productReference = 70C0AB332EA8B75C004951FA /* TheDatingApp.app */;
@@ -433,6 +440,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -465,6 +473,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -611,6 +620,14 @@
 		70C0AB662EA8BF48004951FA /* Logger */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Logger;
+		};
+		70C0AB6A2EA8C444004951FA /* Helpers */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Helpers;
+		};
+		70C0AB6C2EA8C444004951FA /* Networking */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Networking;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
