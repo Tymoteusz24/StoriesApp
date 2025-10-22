@@ -8,15 +8,15 @@
 import Foundation
 import Combine
 import Logger
-import Networking
+import DomainData
 
 class Configuration: ObservableObject {
     
     let logger: ILogger
-    let apiClientService: IAPIClientService
-    init(logger: ILogger, apiClientService: IAPIClientService) {
+    let userProfileService: UserProfileSyncService
+    init(logger: ILogger, userProfileService: UserProfileSyncService) {
         self.logger = logger
-        self.apiClientService = apiClientService
+        self.userProfileService = userProfileService
     }
 }
 

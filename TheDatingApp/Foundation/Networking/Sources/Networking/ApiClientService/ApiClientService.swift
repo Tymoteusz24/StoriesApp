@@ -13,7 +13,7 @@ public enum APIError: Error {
 
 public typealias APIResponse = (data: Data, statusCode: Int)
 
-public protocol IAPIClientService {
+public protocol IAPIClientService: Sendable {
     func request(_ endpoint: EndpointType) async -> Result<APIResponse, APIError>
     func request<T: Decodable>(_ endpoint: EndpointType, for type: T.Type, decoder: JSONDecoder) async throws -> T
     func request<T, M: Mappable>(_ endpoint: EndpointType, mapper: M) async throws -> T where M.Output == T
@@ -25,7 +25,7 @@ public extension IAPIClientService {
     }
 }
 
-public final class APIClientService: IAPIClientService {
+public final class APIClientService: IAPIClientService, @unchecked Sendable {
     public struct Configuration: Sendable {
         let baseURL: URL?
         let baseHeaders: [String: String]

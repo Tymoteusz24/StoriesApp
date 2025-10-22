@@ -6,13 +6,14 @@ import PackageDescription
 let package = Package(
     name: "Storage",
     platforms: [
-        .iOS(.v17)
+        .iOS(.v17),
+        .macOS(.v14)
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "Storage",
-            targets: ["Storage"]
+            targets: ["Storage", "SwiftDataStorage"]
         ),
     ],
     targets: [
@@ -20,6 +21,10 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "Storage"
+        ),
+        .target(
+            name: "SwiftDataStorage",
+            dependencies: ["Storage"]
         ),
         .testTarget(
             name: "StorageTests",

@@ -37,6 +37,7 @@ let package = Package(
                 "Domain",
                 "Networking",
                 "Helpers",
+                "Storage",
             ]
         ),
         .target(name: "DomainDataMock", dependencies: ["Domain", "DomainData"], resources: [.process("Resources")]),

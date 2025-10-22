@@ -8,9 +8,9 @@
 import Foundation
 
 // Mappable protocol for mapping from Data to Model
-public protocol Mappable {
-    associatedtype Input: Decodable
-    associatedtype Output
+public protocol Mappable: Sendable {
+    associatedtype Input: Decodable & Sendable
+    associatedtype Output: Sendable
 
     func map(_ input: Input) throws -> Output
 }

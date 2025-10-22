@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-protocol StorageRespository: Actor {
+public protocol StorageRespository: Actor {
     associatedtype DBModel
     associatedtype DomainModel
 
@@ -18,9 +18,9 @@ protocol StorageRespository: Actor {
     func save() throws
 }
 
-protocol StorageMapper<DBModel, DomainModel> {
+public protocol StorageMapper<DBModel, DomainModel>: Sendable {
     associatedtype DBModel
-    associatedtype DomainModel
+    associatedtype DomainModel: Sendable
 
     func mapToDomain(_ dbModel: DBModel) -> DomainModel
     func mapToDB(_ domainModel: DomainModel) -> DBModel

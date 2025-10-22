@@ -10,7 +10,7 @@ import Domain
 import Networking
 
 /// Service implementation for fetching user profiles from API
-public final class UserProfileRemoteRespository: UserProfileServiceProtocol {
+public final actor UserProfileRemoteRespository: UserProfileServiceProtocol {
     private let apiClient: IAPIClientService
     private let mapper: UserProfilesMapper
     

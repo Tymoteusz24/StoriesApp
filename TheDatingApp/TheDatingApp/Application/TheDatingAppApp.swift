@@ -14,39 +14,43 @@ import Networking
 
 @main
 struct TheDatingAppApp: App {
-
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-        
-        var profileService: UserProfileServiceProtocol = {
-            let logger = NoLogger(label: "TheDatingApp")
-            let apiClient = APIClientService (
-                logger: logger,
-                configuration: .default
-            )
-            return UserProfileRemoteRespository(apiClient: apiClient)
-        }()
-
+    
+    let modelContainer: ModelContainer
+    let configuration: Configuration
+    
+    init() {
         do {
-            let logger = Logger(label: "TheDatingApp")
-            logger.log(level: .debug, message: "app starts")
-            Task {
-                let profiles = try? await profileService.fetchProfiles()
-                print("profiles \(profiles ?? [])")
-            }
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            modelContainer = try ModelContainer(
+                for: UserProfileDBModel.self,
+                configurations: ModelConfiguration(isStoredInMemoryOnly: false)
+            )
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            fatalError("Failed to create ModelContainer: \(error)")
         }
-    }()
+        let logger = NoLogger(label: "TheDatingApp")
+        
+        let apiClient = APIClientService (
+            logger: logger,
+            configuration: .default
+        )
+        
+        let userProfileService = UserProfileSyncService(
+            apiClient: apiClient,
+            modelContext: modelContainer.mainContext
+        )
+        Task {
+            let profiles = try? await userProfileService.syncProfiles()
+            print("Synced profiles count: \(profiles?.count ?? 0)")
+        }
+        self.configuration = Configuration(logger: logger,
+                                           userProfileService: userProfileService)
+    }
 
     var body: some Scene {
         WindowGroup {
             MainTabView()
         }
-        .modelContainer(sharedModelContainer)
+        .environmentObject(configuration)
+        .modelContainer(modelContainer)
     }
 }

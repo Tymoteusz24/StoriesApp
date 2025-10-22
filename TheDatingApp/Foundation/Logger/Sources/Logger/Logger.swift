@@ -4,13 +4,13 @@
 import Foundation
 import Logging
 
-public protocol ILogger {
+public protocol ILogger: Sendable {
     func log(level: LogLevel,
              message: @autoclosure () -> String
     )
 }
 
-public struct Logger: ILogger {
+public struct Logger: ILogger, Sendable {
     private let logger: Logging.Logger
 
     public init(label: String) {
@@ -22,7 +22,7 @@ public struct Logger: ILogger {
     }
 }
 
-public struct NoLogger: ILogger {
+public struct NoLogger: ILogger, Sendable {
     private let logger: Logging.Logger
 
     public init(label: String) {

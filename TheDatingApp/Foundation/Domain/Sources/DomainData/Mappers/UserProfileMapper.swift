@@ -10,7 +10,7 @@ import Domain
 import Networking
 
 /// Mapper to convert UserProfileDTO to UserProfile domain model
-public struct UserProfileMapper: Mappable {
+public struct UserProfileMapper: Mappable, Sendable {
     public typealias Input = UserProfileDTO
     public typealias Output = UserProfile
     
@@ -29,7 +29,7 @@ public struct UserProfileMapper: Mappable {
 }
 
 /// Mapper for list of profiles
-public struct UserProfilesMapper: Mappable {
+public struct UserProfilesMapper: Mappable, Sendable {
     public typealias Input = UserProfilesDTO
     public typealias Output = [UserProfile]
     
