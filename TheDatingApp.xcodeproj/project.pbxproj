@@ -140,6 +140,7 @@
 				70C0AB2F2EA8B75C004951FA /* Sources */,
 				70C0AB302EA8B75C004951FA /* Frameworks */,
 				70C0AB312EA8B75C004951FA /* Resources */,
+				70C0AB802EA8E001004951FA /* SwiftGen */,
 			);
 			buildRules = (
 			);
@@ -273,6 +274,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		70C0AB802EA8E001004951FA /* SwiftGen */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftGen;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# SwiftGen - Generate type-safe code\nif which swiftgen >/dev/null; then\n  cd \"$SRCROOT/TheDatingApp/TheDatingApp/Supporting\"\n  swiftgen config run --config swiftgen.yml\n  \n  # Post-process: Add @unchecked Sendable conformance for Swift 6 concurrency\n  ASSETS_FILE=\"$SRCROOT/TheDatingApp/Foundation/SystemDesign/Sources/SystemDesign/Generated/Assets.swift\"\n  if [ -f \"$ASSETS_FILE\" ]; then\n    sed -i '' 's/public final class ColorAsset {/public final class ColorAsset: @unchecked Sendable {/g' \"$ASSETS_FILE\"\n    sed -i '' 's/public final class ImageAsset {/public final class ImageAsset: @unchecked Sendable {/g' \"$ASSETS_FILE\"\n    echo \"✅ SwiftGen: Added Sendable conformance to Assets.swift\"\n  fi\nelse\n  echo \"warning: SwiftGen not installed, download from https://github.com/SwiftGen/SwiftGen\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		70C0AB2F2EA8B75C004951FA /* Sources */ = {
@@ -460,6 +483,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -493,6 +517,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
