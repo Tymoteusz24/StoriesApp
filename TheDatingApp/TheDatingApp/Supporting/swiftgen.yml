@@ -1,8 +1,3 @@
-plist:
-    inputs: TheDatingApp/Supporting/Info.plist
-    outputs:
-    - templateName: runtime-swift5
-      output: TheDatingApp/Generated/Info.swift
 strings:
   inputs: Foundation/SystemDesign/Sources/SystemDesign/Supporting/en.lproj/Localizable.strings
   filter: .+\.strings$
