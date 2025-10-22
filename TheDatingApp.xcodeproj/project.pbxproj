@@ -42,6 +42,7 @@
 				Foundation/Helpers,
 				Foundation/Logger,
 				Foundation/Networking,
+				Foundation/Router,
 			);
 			target = 70C0AB322EA8B75C004951FA /* TheDatingApp */;
 		};
