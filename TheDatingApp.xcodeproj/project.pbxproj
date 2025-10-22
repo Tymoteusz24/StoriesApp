@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		70C0AB672EA8BF48004951FA /* Logger in Frameworks */ = {isa = PBXBuildFile; productRef = 70C0AB662EA8BF48004951FA /* Logger */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		70C0AB432EA8B75E004951FA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -29,9 +33,23 @@
 		70C0AB4C2EA8B75E004951FA /* TheDatingAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TheDatingAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		70C0AB642EA8BDC9004951FA /* Exceptions for "TheDatingApp" folder in "TheDatingApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Foundation/Helpers,
+				Foundation/Logger,
+			);
+			target = 70C0AB322EA8B75C004951FA /* TheDatingApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		70C0AB352EA8B75C004951FA /* TheDatingApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				70C0AB642EA8BDC9004951FA /* Exceptions for "TheDatingApp" folder in "TheDatingApp" target */,
+			);
 			path = TheDatingApp;
 			sourceTree = "<group>";
 		};
@@ -52,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70C0AB672EA8BF48004951FA /* Logger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +97,7 @@
 				70C0AB352EA8B75C004951FA /* TheDatingApp */,
 				70C0AB452EA8B75E004951FA /* TheDatingAppTests */,
 				70C0AB4F2EA8B75E004951FA /* TheDatingAppUITests */,
+				70C0AB652EA8BF48004951FA /* Frameworks */,
 				70C0AB342EA8B75C004951FA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +110,13 @@
 				70C0AB4C2EA8B75E004951FA /* TheDatingAppUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		70C0AB652EA8BF48004951FA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -112,6 +139,7 @@
 			);
 			name = TheDatingApp;
 			packageProductDependencies = (
+				70C0AB662EA8BF48004951FA /* Logger */,
 			);
 			productName = TheDatingApp;
 			productReference = 70C0AB332EA8B75C004951FA /* TheDatingApp.app */;
@@ -578,6 +606,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		70C0AB662EA8BF48004951FA /* Logger */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Logger;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 70C0AB2B2EA8B75C004951FA /* Project object */;
 }
