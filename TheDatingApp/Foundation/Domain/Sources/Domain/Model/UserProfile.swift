@@ -8,7 +8,7 @@
 import Foundation
 
 /// Domain model representing a user profile in the dating app
-public struct UserProfile: Identifiable, Sendable {
+public struct UserProfile: Identifiable, Sendable, Hashable {
     public let id: Int
     public let name: String
     public let age: Int

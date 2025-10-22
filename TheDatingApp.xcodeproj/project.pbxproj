@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		700248BB2EA91C1200AC1386 /* Feed in Frameworks */ = {isa = PBXBuildFile; productRef = 700248BA2EA91C1200AC1386 /* Feed */; };
 		70C0AB672EA8BF48004951FA /* Logger in Frameworks */ = {isa = PBXBuildFile; productRef = 70C0AB662EA8BF48004951FA /* Logger */; };
 		70C0AB6B2EA8C444004951FA /* Helpers in Frameworks */ = {isa = PBXBuildFile; productRef = 70C0AB6A2EA8C444004951FA /* Helpers */; };
 		70C0AB6D2EA8C444004951FA /* Networking in Frameworks */ = {isa = PBXBuildFile; productRef = 70C0AB6C2EA8C444004951FA /* Networking */; };
@@ -43,6 +44,7 @@
 		70C0AB642EA8BDC9004951FA /* Exceptions for "TheDatingApp" folder in "TheDatingApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Features/Feed,
 				Foundation/Domain,
 				Foundation/Helpers,
 				Foundation/Logger,
@@ -81,6 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				700248BB2EA91C1200AC1386 /* Feed in Frameworks */,
 				70C0ADB62EA8E039004951FA /* Domain in Frameworks */,
 				70C0AB6D2EA8C444004951FA /* Networking in Frameworks */,
 				70C0AB6B2EA8C444004951FA /* Helpers in Frameworks */,
@@ -164,6 +167,7 @@
 				70C0AB7C2EA8D1CE004951FA /* SystemDesign */,
 				70C0ADB52EA8E039004951FA /* Domain */,
 				70C0ADB72EA8E039004951FA /* DomainData */,
+				700248BA2EA91C1200AC1386 /* Feed */,
 			);
 			productName = TheDatingApp;
 			productReference = 70C0AB332EA8B75C004951FA /* TheDatingApp.app */;
@@ -658,6 +662,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		700248BA2EA91C1200AC1386 /* Feed */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Feed;
+		};
 		70C0AB662EA8BF48004951FA /* Logger */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Logger;

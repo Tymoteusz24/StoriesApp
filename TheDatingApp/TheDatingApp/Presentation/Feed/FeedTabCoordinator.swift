@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Router
+import Feed
 // import feature
 
 struct FeedTabCoordinator: View {
@@ -16,8 +17,7 @@ struct FeedTabCoordinator: View {
     
     var body: some View {
         NavigationStack(path: $router.navPath) {
-           Text("Feed Tab Root View")
-                .navigationTitle("Feed")
+            FeedCoordinator(depedencies: .init())
         }.environmentObject(router)
     }
 }
