@@ -19,8 +19,15 @@ struct FeedView: View {
     }
     
     var body: some View {
-        Text("Hello, Feed! \(viewModel.profiles.map { $0.name }.joined(separator: ", "))")
-            .task {
+        VStack {
+            if let topProfile = viewModel.topProfile {
+                FeedCardView(profile: topProfile)
+                
+            }
+           
+        }
+        .padding(.horizontal, 16)
+        .task {
                 await self.viewModel.getCurrentFeed()
             }
     }
