@@ -38,10 +38,6 @@ struct TheDatingAppApp: App {
             apiClient: apiClient,
             modelContext: modelContainer.mainContext
         )
-        Task {
-            let profiles = try? await userProfileService.syncProfiles()
-            print("Synced profiles count: \(profiles?.count ?? 0)")
-        }
         self.configuration = Configuration(logger: logger,
                                            userProfileService: userProfileService)
     }

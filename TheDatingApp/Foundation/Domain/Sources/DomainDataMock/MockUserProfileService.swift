@@ -10,7 +10,7 @@ import Domain
 import DomainData
 
 /// Mock implementation of UserProfileService for testing and previews
-public final class MockUserProfileService: UserProfileServiceProtocol {
+public final actor MockUserProfileService: UserProfileServiceProtocol {
     private let shouldFail: Bool
     private let delay: TimeInterval
     

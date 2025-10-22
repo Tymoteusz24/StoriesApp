@@ -23,12 +23,15 @@ public struct FeedCoordinator: View {
     }
     
     public var body: some View {
-        FeedView(dependencies: .init())
+        FeedView(dependencies: .init(userProfileService: depedencies.userProfileService))
     }
 }
 
 public extension FeedCoordinator {
     struct Depedencies {
-       public init() { }
+        let userProfileService: UserProfileSyncServiceProtocol
+       public init(userProfileService: UserProfileSyncServiceProtocol) {
+            self.userProfileService = userProfileService
+       }
     }
 }

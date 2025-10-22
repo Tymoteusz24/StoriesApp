@@ -17,7 +17,7 @@ struct FeedTabCoordinator: View {
     
     var body: some View {
         NavigationStack(path: $router.navPath) {
-            FeedCoordinator(depedencies: .init())
+            FeedCoordinator(depedencies: .init(userProfileService: configuration.userProfileService))
         }.environmentObject(router)
     }
 }

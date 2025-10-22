@@ -25,6 +25,7 @@ let package = Package(
             name: "Feed",
             dependencies: [
                 .product(name: "DomainData", package: "Domain"),
+                .product(name: "DomainDataMock", package: "Domain"),
                 "Router",
                 "SystemDesign"
             ]

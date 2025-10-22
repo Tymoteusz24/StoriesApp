@@ -7,6 +7,8 @@
 
 import SwiftUI
 import Router
+import DomainData
+import DomainDataMock
 
 struct FeedView: View {
     @EnvironmentObject private var router: Router
@@ -17,10 +19,13 @@ struct FeedView: View {
     }
     
     var body: some View {
-        Text("Hello, Feed!")
+        Text("Hello, Feed! \(viewModel.profiles.map { $0.name }.joined(separator: ", "))")
+            .task {
+                await self.viewModel.getCurrentFeed()
+            }
     }
 }
 
 #Preview {
-    FeedView(dependencies: .init())
+    FeedView(dependencies: .init(userProfileService: MockUserProfileSyncService.preview))
 }
