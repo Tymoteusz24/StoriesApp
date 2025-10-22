@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Domain",
-    platforms: [.iOS(.v16)],
+    platforms: [.iOS(.v17)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
@@ -19,6 +19,7 @@ let package = Package(
     dependencies: [
         .package(path: "../Networking"),
         .package(path: "../Helpers"),
+        .package(path: "../Storage"),
     ],
 
     targets: [
@@ -26,14 +27,16 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "Domain",
-            dependencies: []
+            dependencies: [
+                "Storage"
+            ]
         ),
         .target(
             name: "DomainData",
             dependencies: [
                 "Domain",
                 "Networking",
-                "Helpers"
+                "Helpers",
             ]
         ),
         .target(name: "DomainDataMock", dependencies: ["Domain", "DomainData"], resources: [.process("Resources")]),
