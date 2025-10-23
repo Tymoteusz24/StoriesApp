@@ -11,32 +11,68 @@ import SystemDesign
 import SDWebImageSwiftUI
 
 struct FeedCardView: View {
-    let profile: UserProfile
+    let profile: UserProfile?
     var body: some View {
+        ZStack() {
+            // Background image - fills entire card
+            imageWithFradient
+            
+            // Text + buttons
+            VStack {
+                Spacer()
+                textView
+            }
+            .padding(Design.Spacing.default)
+            .padding(.bottom, Design.Buttons.largeHeight/2)
+        }
+        .background(Color.gray.opacity(0.3))
+        .clipShape(RoundedRectangle(cornerRadius: Design.Card.cornerRadius))
+        .shadow(radius: 5)
+    }
+}
+
+extension FeedCardView {
+    var imageWithFradient: some View {
         ZStack {
-            HStack {
-                WebImage(url: URL(string: profile.profileImageURL?.absoluteString ?? ""))
+            // Background image - fills entire card
+            GeometryReader { proxy in
+                WebImage(url: profile?.profileImageURL)
                     .resizable()
-                    .indicator(.activity)
                     .scaledToFill()
+                    .frame(width: proxy.size.width, height: proxy.size.height)
                     .clipped()
             }
-      
-            Text("\(profile.name), \(profile.age)")
-                .font(.title)
-                .padding()
-            Text(profile.bio)
-                .font(.body)
-                .padding([.leading, .trailing, .bottom])
+            // Gradient overlay for better text readability
+            LinearGradient(
+                gradient: Gradient(colors: [.clear, .black.opacity(0.9)]),
+                startPoint: .center,
+                endPoint: .bottom
+            )
         }
-        .clipped()
-        .background(Color.white)
-        .cornerRadius(10)
-        .shadow(radius: 5)
-        .padding(.horizontal)
+    }
+    
+    var textView: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if let profile = profile {
+                Text("\(profile.name), \(profile.age)")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                
+                // bio
+                Text(profile.bio)
+                    .font(.body)
+                    .foregroundColor(.white)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
 #Preview {
-    FeedCardView(profile: .mock)
+    VStack {
+        FeedCardView(profile: .mock)
+            .padding(.vertical, 50)
+            .padding(.horizontal, Design.Spacing.default)
+    }
 }

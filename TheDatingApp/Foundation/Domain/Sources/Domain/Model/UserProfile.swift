@@ -41,7 +41,7 @@ extension UserProfile {
         name: "Jessica",
         age: 25,
         location: "Ripon, CA",
-        bio: "baby stoner, + size \nbig boob haver and enjoyer\nlast pic is most recent :)",
+        bio: "baby stoner, + size big boob haver and enjoyer last pic is most recent :)",
         profileImageURL: URL(string: "https://down-static.s3.us-west-2.amazonaws.com/picks_filter/female_v2/pic00000.jpg")
     )
     
