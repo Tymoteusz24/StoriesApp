@@ -1,0 +1,6 @@
+# User-specific files
+xcuserdata/
+
+# Scheme management files (user-specific)
+xcuserdata/**/xcschemes/xcschememanagement.plist
+
