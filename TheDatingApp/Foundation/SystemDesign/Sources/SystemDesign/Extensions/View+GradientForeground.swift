@@ -62,7 +62,7 @@ extension Image {
     /// Creates an image with a flame gradient (orange to red)
     public func flameGradient() -> some View {
         self.gradientForeground(
-            colors: [BrandColors.flameTop, BrandColors.flameBottom],
+            colors: BrandColors.flameGradientColors,
             startPoint: .top,
             endPoint: .bottom
         )
@@ -71,7 +71,7 @@ extension Image {
     /// Creates an image with the primary brand gradient
     public func brandGradient() -> some View {
         self.gradientForeground(
-            colors: [BrandColors.primaryPink, BrandColors.secondaryPurple],
+            colors: BrandColors.primaryGradientColors,
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
@@ -83,7 +83,7 @@ extension Text {
     /// Creates text with the primary brand gradient
     public func brandGradient() -> some View {
         self.gradientForeground(
-            colors: [BrandColors.primaryPink, BrandColors.secondaryPurple],
+            colors: BrandColors.primaryGradientColors,
             startPoint: .leading,
             endPoint: .trailing
         )
