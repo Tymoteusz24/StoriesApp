@@ -23,101 +23,15 @@ struct StoryViewerView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Color.black.edgesIgnoringSafeArea(.all)
-                
-                // Story content
-                TabView(selection: $viewModel.currentIndex) {
-                    ForEach(viewModel.stories.indices, id: \.self) { index in
-                        StoryContentView(story: viewModel.stories[index])
-                            .tag(index)
-                            .ignoresSafeArea(.all)
-                    }
-                }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .ignoresSafeArea(.all)
-                .onChange(of: viewModel.currentIndex) { oldValue, newValue in
-                    if oldValue != newValue {
-                        viewModel.startAutoAdvance()
-                        Task {
-                            await viewModel.markCurrentAsSeen()
-                        }
-                    }
-                }
-                
-                // Tap zones for navigation
-                HStack(spacing: 0) {
-                    // Left tap zone - previous story
-                    Color.clear
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            viewModel.previousStory()
-                        }
-                    
-                    // Right tap zone - next story
-                    Color.clear
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            viewModel.nextStory()
-                        }
-                }
-                
-                // Overlays
-                VStack(spacing: 0) {
-                    // Progress bars
-                    StoryProgressBar(
-                        storyCount: viewModel.stories.count,
-                        currentIndex: viewModel.currentIndex,
-                        progress: viewModel.progress
-                    )
-                    
-                    // Header
-                    StoryHeaderView(
-                        story: viewModel.currentStory,
-                        onClose: {
-                            router.navigateBack()
-                        }
-                    )
-                    
-                    Spacer()
-                    
-                    // Actions (like button)
-                    StoryActionsView(
-                        isLiked: viewModel.isLiked,
-                        onLike: {
-                            await viewModel.toggleLike()
-                        }
-                    )
-                    .padding(.bottom, 40)
-                }
+                backgroundLayer
+                storyPagerLayer
+                navigationTapZonesLayer
+                overlayLayer
             }
             .offset(y: dragOffset)
-            .gesture(
-                DragGesture()
-                    .updating($dragOffset) { value, state, _ in
-                        if value.translation.height > 0 {
-                            state = value.translation.height
-                        }
-                    }
-                    .onEnded { value in
-                        if value.translation.height > 100 {
-                            router.navigateBack()
-                        }
-                    }
-            )
-            .gesture(
-                LongPressGesture(minimumDuration: 0.2)
-                    .onChanged { _ in
-                        viewModel.pause()
-                    }
-                    .onEnded { _ in
-                        viewModel.resume()
-                    }
-            )
-            .onTapGesture(count: 2) { location in
-                Task {
-                    await viewModel.toggleLike()
-                }
-            }
+            .gesture(dismissSwipeGesture)
+            .gesture(pauseGesture)
+            .onTapGesture(count: 2, perform: handleDoubleTap)
         }
         .navigationBarHidden(true)
         .statusBar(hidden: true)
@@ -126,6 +40,167 @@ struct StoryViewerView: View {
         }
         .onDisappear {
             viewModel.stopAutoAdvance()
+        }
+    }
+    
+    // MARK: - Layers
+    
+    private var backgroundLayer: some View {
+        Color.black.edgesIgnoringSafeArea(.all)
+    }
+    
+    private var storyPagerLayer: some View {
+        StoryPager(
+            stories: viewModel.stories,
+            currentIndex: $viewModel.currentIndex,
+            onIndexChanged: handleStoryIndexChanged
+        )
+    }
+    
+    private var navigationTapZonesLayer: some View {
+        NavigationTapZones(
+            onPrevious: viewModel.previousStory,
+            onNext: viewModel.nextStory
+        )
+    }
+    
+    private var overlayLayer: some View {
+        StoryOverlay(
+            storyCount: viewModel.stories.count,
+            currentIndex: viewModel.currentIndex,
+            progress: viewModel.progress,
+            currentStory: viewModel.currentStory,
+            isLiked: viewModel.isLiked,
+            onClose: handleClose,
+            onLike: handleLike
+        )
+    }
+    
+    // MARK: - Gestures
+    
+    private var dismissSwipeGesture: some Gesture {
+        DragGesture()
+            .updating($dragOffset) { value, state, _ in
+                if value.translation.height > 0 {
+                    state = value.translation.height
+                }
+            }
+            .onEnded { value in
+                if value.translation.height > 100 {
+                    router.navigateBack()
+                }
+            }
+    }
+    
+    private var pauseGesture: some Gesture {
+        LongPressGesture(minimumDuration: 0.2)
+            .onChanged { _ in
+                viewModel.pause()
+            }
+            .onEnded { _ in
+                viewModel.resume()
+            }
+    }
+    
+    // MARK: - Actions
+    
+    private func handleStoryIndexChanged() {
+        viewModel.startAutoAdvance()
+        Task {
+            await viewModel.markCurrentAsSeen()
+        }
+    }
+    
+    private func handleClose() {
+        router.navigateBack()
+    }
+    
+    private func handleLike() async {
+        await viewModel.toggleLike()
+    }
+    
+    private func handleDoubleTap() {
+        Task {
+            await viewModel.toggleLike()
+        }
+    }
+}
+
+// MARK: - Story Pager
+
+private struct StoryPager: View {
+    let stories: [Story]
+    @Binding var currentIndex: Int
+    let onIndexChanged: () -> Void
+    
+    var body: some View {
+        TabView(selection: $currentIndex) {
+            ForEach(stories.indices, id: \.self) { index in
+                StoryContentView(story: stories[index])
+                    .tag(index)
+                    .ignoresSafeArea(.all)
+            }
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .ignoresSafeArea(.all)
+        .onChange(of: currentIndex) { oldValue, newValue in
+            if oldValue != newValue {
+                onIndexChanged()
+            }
+        }
+    }
+}
+
+// MARK: - Navigation Tap Zones
+
+private struct NavigationTapZones: View {
+    let onPrevious: () -> Void
+    let onNext: () -> Void
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            Color.clear
+                .contentShape(Rectangle())
+                .onTapGesture(perform: onPrevious)
+            
+            Color.clear
+                .contentShape(Rectangle())
+                .onTapGesture(perform: onNext)
+        }
+    }
+}
+
+// MARK: - Story Overlay
+
+private struct StoryOverlay: View {
+    let storyCount: Int
+    let currentIndex: Int
+    let progress: Double
+    let currentStory: Story
+    let isLiked: Bool
+    let onClose: () -> Void
+    let onLike: () async -> Void
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            StoryProgressBar(
+                storyCount: storyCount,
+                currentIndex: currentIndex,
+                progress: progress
+            )
+            
+            StoryHeaderView(
+                story: currentStory,
+                onClose: onClose
+            )
+            
+            Spacer()
+            
+            StoryActionsView(
+                isLiked: isLiked,
+                onLike: onLike
+            )
+            .padding(.bottom, 40)
         }
     }
 }

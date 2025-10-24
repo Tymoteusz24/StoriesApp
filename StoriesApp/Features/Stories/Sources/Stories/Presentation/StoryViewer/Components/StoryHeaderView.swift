@@ -41,13 +41,6 @@ struct StoryHeaderView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
-        .background(
-            LinearGradient(
-                colors: [Color.black.opacity(0.6), Color.clear],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        )
     }
     
     private func timeAgoString(from date: Date) -> String {
