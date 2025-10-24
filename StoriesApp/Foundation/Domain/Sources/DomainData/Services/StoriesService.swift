@@ -63,6 +63,9 @@ public actor StoriesService: StoriesServiceProtocol {
             baseStories = try await remoteRepository.fetchStories(page: 1, pageSize: pageSize)
         }
         
+        // Simulate network delay for pagination
+        try await Task.sleep(for: .seconds(1.5))
+        
         currentPage += 1
         return getPaginatedStories()
     }
