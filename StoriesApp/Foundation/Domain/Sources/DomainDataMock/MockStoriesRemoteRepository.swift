@@ -13,15 +13,24 @@ import DomainData
 public final actor MockStoriesRemoteRepository: StoriesRemoteRepositoryProtocol {
     private let shouldFail: Bool
     private let delay: TimeInterval
+    private let randomErrorRate: Double
     
-    public init(shouldFail: Bool = false, delay: TimeInterval = 0.5) {
+    public init(shouldFail: Bool = false, delay: TimeInterval = 0.5, randomErrorRate: Double = 0.25) {
         self.shouldFail = shouldFail
         self.delay = delay
+        self.randomErrorRate = randomErrorRate
     }
     
     public func fetchStories(page: Int = 1, pageSize: Int = 20) async throws -> [Story] {
         // Simulate network delay
         try await Task.sleep(for: .seconds(delay))
+        
+        // Random error simulation
+        if Double.random(in: 0...1) < randomErrorRate {
+            throw NSError(domain: "MockStoriesRemoteRepository", code: -1, userInfo: [
+                NSLocalizedDescriptionKey: "Network connection failed. Please try again."
+            ])
+        }
         
         if shouldFail {
             throw NSError(domain: "MockStoriesRemoteRepository", code: -1, userInfo: [

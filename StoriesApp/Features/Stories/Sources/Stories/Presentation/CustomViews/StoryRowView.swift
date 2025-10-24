@@ -59,3 +59,89 @@ struct StoryRowView: View {
         .cornerRadius(12)
     }
 }
+
+#Preview("Story Row - Unseen") {
+    ZStack {
+        Color.black.edgesIgnoringSafeArea(.all)
+        StoryRowView(
+            story: Story(
+                id: 1,
+                userId: 100,
+                userName: "Jessica",
+                userProfileImageURL: URL(string: "https://i.pravatar.cc/300?img=1"),
+                mediaURL: URL(string: "https://picsum.photos/id/237/1080/1920"),
+                createdAt: Date(),
+                duration: 5.0
+            ),
+            isSeen: false,
+            isLiked: false
+        )
+        .padding()
+    }
+}
+
+#Preview("Story Row - Seen") {
+    ZStack {
+        Color.black.edgesIgnoringSafeArea(.all)
+        StoryRowView(
+            story: Story(
+                id: 2,
+                userId: 101,
+                userName: "Krystina",
+                userProfileImageURL: URL(string: "https://i.pravatar.cc/300?img=5"),
+                mediaURL: URL(string: "https://picsum.photos/id/1025/1080/1920"),
+                createdAt: Date(),
+                duration: 7.0
+            ),
+            isSeen: true,
+            isLiked: false
+        )
+        .padding()
+    }
+}
+
+#Preview("Story Row - Liked") {
+    ZStack {
+        Color.black.edgesIgnoringSafeArea(.all)
+        StoryRowView(
+            story: Story(
+                id: 3,
+                userId: 102,
+                userName: "Taty",
+                userProfileImageURL: URL(string: "https://i.pravatar.cc/300?img=9"),
+                mediaURL: URL(string: "https://picsum.photos/id/1039/1080/1920"),
+                createdAt: Date(),
+                duration: 6.0
+            ),
+            isSeen: true,
+            isLiked: true
+        )
+        .padding()
+    }
+}
+
+#Preview("Story Row - All States") {
+    ZStack {
+        Color.black.edgesIgnoringSafeArea(.all)
+        VStack(spacing: 16) {
+            StoryRowView(
+                story: Story(id: 1, userId: 100, userName: "Jessica", userProfileImageURL: URL(string: "https://i.pravatar.cc/300?img=1"), mediaURL: nil, createdAt: Date(), duration: 5.0),
+                isSeen: false,
+                isLiked: false
+            )
+            
+            StoryRowView(
+                story: Story(id: 2, userId: 101, userName: "Krystina", userProfileImageURL: URL(string: "https://i.pravatar.cc/300?img=5"), mediaURL: nil, createdAt: Date(), duration: 7.0),
+                isSeen: true,
+                isLiked: false
+            )
+            
+            StoryRowView(
+                story: Story(id: 3, userId: 102, userName: "Taty", userProfileImageURL: URL(string: "https://i.pravatar.cc/300?img=9"), mediaURL: nil, createdAt: Date(), duration: 6.0),
+                isSeen: true,
+                isLiked: true
+            )
+        }
+        .padding()
+    }
+}

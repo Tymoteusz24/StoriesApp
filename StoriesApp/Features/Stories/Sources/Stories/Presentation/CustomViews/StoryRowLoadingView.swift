@@ -39,10 +39,12 @@ struct StoryRowLoadingView: View {
     }
 }
 
-#Preview {
+#Preview("Story Row Loading (Shimmer)") {
     ZStack {
         Color.black.edgesIgnoringSafeArea(.all)
         VStack(spacing: 16) {
+            StoryRowLoadingView()
+            StoryRowLoadingView()
             StoryRowLoadingView()
             StoryRowLoadingView()
             StoryRowLoadingView()

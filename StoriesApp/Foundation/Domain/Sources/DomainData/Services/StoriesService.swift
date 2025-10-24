@@ -50,6 +50,16 @@ public actor StoriesService: StoriesServiceProtocol {
     public func fetchInitialStories() async throws -> [Story] {
         if baseStories.isEmpty {
             baseStories = try await remoteRepository.fetchStories(page: 1, pageSize: pageSize)
+        } else {
+            // Simulate delay for refresh
+            try await Task.sleep(for: .seconds(1.5))
+            
+            // Simulate random network errors (40% chance) when refreshing
+            if Double.random(in: 0...1) < 0.4 {
+                throw NSError(domain: "StoriesService", code: -1, userInfo: [
+                    NSLocalizedDescriptionKey: "Network connection failed. Please try again."
+                ])
+            }
         }
         
         currentPage = 0
@@ -63,8 +73,15 @@ public actor StoriesService: StoriesServiceProtocol {
             baseStories = try await remoteRepository.fetchStories(page: 1, pageSize: pageSize)
         }
         
-        // Simulate network delay for pagination
+        // Simulate network delay and random errors for pagination
         try await Task.sleep(for: .seconds(1.5))
+        
+        // Simulate random network errors (40% chance)
+        if Double.random(in: 0...1) < 0.4 {
+            throw NSError(domain: "StoriesService", code: -1, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to load more stories."
+            ])
+        }
         
         currentPage += 1
         return getPaginatedStories()

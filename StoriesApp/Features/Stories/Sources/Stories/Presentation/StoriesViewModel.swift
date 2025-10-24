@@ -17,6 +17,7 @@ final class StoriesViewModel: ObservableObject {
     @Published var interactions: [Int: StoryInteraction] = [:]
     @Published var isLoadingMore: Bool = false
     @Published var isLoadingInitial: Bool = false
+    @Published var errorMessage: String?
     
     var topStory: Story? {
         stories.first
@@ -39,14 +40,17 @@ final class StoriesViewModel: ObservableObject {
     
     func loadInitialStories() async {
         isLoadingInitial = true
+        errorMessage = nil
         print("📱 [StoriesViewModel] Loading initial stories...")
         do {
             let newStories = try await storiesService.fetchInitialStories()
             stories = newStories
+            errorMessage = nil
             print("✅ [StoriesViewModel] Loaded \(newStories.count) stories")
             print("📋 [StoriesViewModel] Story IDs: \(newStories.prefix(5).map { $0.id })")
             await loadInteractions()
         } catch {
+            errorMessage = error.localizedDescription
             print("❌ [StoriesViewModel] Error loading stories: \(error)")
         }
         isLoadingInitial = false
@@ -61,11 +65,13 @@ final class StoriesViewModel: ObservableObject {
             let newStories = try await storiesService.fetchNextPage()
             let previousCount = stories.count
             stories.append(contentsOf: newStories)
+            errorMessage = nil
             print("✅ [StoriesViewModel] Loaded \(newStories.count) more stories. Total: \(stories.count)")
             print("📋 [StoriesViewModel] New story IDs: \(newStories.prefix(5).map { $0.id })")
             print("📊 [StoriesViewModel] Stories \(previousCount) → \(stories.count)")
             await loadInteractions()
         } catch {
+            errorMessage = error.localizedDescription
             print("❌ [StoriesViewModel] Error loading more stories: \(error)")
         }
         isLoadingMore = false

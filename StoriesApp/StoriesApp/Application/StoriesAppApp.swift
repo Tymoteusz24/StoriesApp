@@ -38,7 +38,7 @@ struct StoriesAppApp: App {
 //            configuration: .default
 //        )
         
-        let storiesRemoteRepository = MockStoriesRemoteRepository(delay: 1.5)
+        let storiesRemoteRepository = MockStoriesRemoteRepository(delay: 1.5, randomErrorRate: 0.4)
         let storiesLocalRepository = StoriesLocalRepository(modelContext: modelContainer.mainContext)
         let storiesService = StoriesService(
             remoteRepository: storiesRemoteRepository,
