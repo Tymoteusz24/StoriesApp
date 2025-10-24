@@ -45,11 +45,7 @@ struct StoriesView: View {
                     // Show actual stories
                     ForEach(viewModel.stories) { story in
                         Button(action: {
-                            let index = viewModel.stories.firstIndex(where: { $0.id == story.id }) ?? 0
-                            router.navigate(to: StoriesDestination.storyViewer(
-                                startIndex: index,
-                                stories: viewModel.stories
-                            ))
+                            router.navigate(to: StoriesDestination.storyViewer(storyId: story.id))
                         }) {
                             StoryRowView(
                                 story: story,

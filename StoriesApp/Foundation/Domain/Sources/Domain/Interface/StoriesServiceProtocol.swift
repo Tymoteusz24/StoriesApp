@@ -14,5 +14,10 @@ public protocol StoriesServiceProtocol: Sendable {
     func markStoryAsSeen(storyId: Int) async throws
     func toggleStoryLike(storyId: Int) async throws
     func getInteraction(forStoryId storyId: Int) async throws -> StoryInteraction?
+    
+    // Single story navigation methods
+    func getStory(byId storyId: Int) async throws -> Story?
+    func getNextStoryId(after storyId: Int) async throws -> Int?
+    func getPreviousStoryId(before storyId: Int) async throws -> Int?
 }
 

@@ -14,48 +14,79 @@ final class StoryViewerViewModel: ObservableObject {
     
     let storiesService: StoriesServiceProtocol
     
-    @Published var currentIndex: Int
-    @Published var stories: [Story]
+    @Published var currentStory: Story?
     @Published var progress: Double = 0.0
     @Published var isPaused: Bool = false
-    @Published var interactions: [Int: StoryInteraction] = [:]
+    @Published var isLoading: Bool = false
+    @Published var interaction: StoryInteraction?
+    @Published var nextStoryId: Int?
+    @Published var previousStoryId: Int?
     
+    private let storyId: Int
     private var autoAdvanceTask: Task<Void, Never>?
     
-    var currentStory: Story {
-        stories[currentIndex]
-    }
+    // Callback when story completes
+    var onStoryComplete: (() -> Void)?
     
     var isLiked: Bool {
-        interactions[currentStory.id]?.isLiked ?? false
+        interaction?.isLiked ?? false
     }
     
     var isSeen: Bool {
-        interactions[currentStory.id]?.isSeen ?? false
+        interaction?.isSeen ?? false
     }
     
     struct Dependencies {
-        let startIndex: Int
-        let stories: [Story]
+        let storyId: Int
         let storiesService: StoriesServiceProtocol
     }
     
     init(dependencies: Dependencies) {
-        self.currentIndex = dependencies.startIndex
-        self.stories = dependencies.stories
+        self.storyId = dependencies.storyId
         self.storiesService = dependencies.storiesService
     }
     
     func startViewing() async {
-        await loadInteractions()
+        await loadStory()
+        await loadInteraction()
+        await loadNavigationIds()
         await markCurrentAsSeen()
         startAutoAdvance()
+    }
+    
+    func loadStory() async {
+        isLoading = true
+        do {
+            currentStory = try await storiesService.getStory(byId: storyId)
+            print("✅ [StoryViewer] Loaded story \(storyId)")
+        } catch {
+            print("❌ [StoryViewer] Error loading story: \(error)")
+        }
+        isLoading = false
+    }
+    
+    func loadInteraction() async {
+        do {
+            interaction = try await storiesService.getInteraction(forStoryId: storyId)
+        } catch {
+            print("❌ [StoryViewer] Error loading interaction: \(error)")
+        }
+    }
+    
+    func loadNavigationIds() async {
+        do {
+            nextStoryId = try await storiesService.getNextStoryId(after: storyId)
+            previousStoryId = try await storiesService.getPreviousStoryId(before: storyId)
+        } catch {
+            print("❌ [StoryViewer] Error loading navigation IDs: \(error)")
+        }
     }
     
     func startAutoAdvance() {
         stopAutoAdvance()
         
-        let duration = currentStory.duration
+        guard let story = currentStory else { return }
+        let duration = story.duration
         progress = 0.0
         
         autoAdvanceTask = Task { @MainActor [weak self] in
@@ -77,17 +108,21 @@ final class StoryViewerViewModel: ObservableObject {
                 if !self.isPaused {
                     self.progress += progressStep
                     
-                    // Check if story completed
+                    // Clamp progress to 1.0 max to avoid warning
                     if self.progress >= 1.0 {
-                        self.nextStory()
+                        self.progress = 1.0
+                        
+                        // Notify completion and exit
+                        self.onStoryComplete?()
                         return
                     }
                 }
             }
             
-            // If we complete the loop, move to next story
+            // If we complete the loop without hitting 1.0, set to 1.0 and complete
             if !Task.isCancelled {
-                self.nextStory()
+                self.progress = 1.0
+                self.onStoryComplete?()
             }
         }
     }
@@ -105,54 +140,25 @@ final class StoryViewerViewModel: ObservableObject {
         isPaused = false
     }
     
-    func nextStory() {
-        if currentIndex < stories.count - 1 {
-            currentIndex += 1
-            Task {
-                await markCurrentAsSeen()
-            }
-            startAutoAdvance()
-        } else {
-            stopAutoAdvance()
-        }
-    }
-    
-    func previousStory() {
-        if currentIndex > 0 {
-            currentIndex -= 1
-            startAutoAdvance()
-        }
-    }
-    
     func toggleLike() async {
+        guard let story = currentStory else { return }
         do {
-            try await storiesService.toggleStoryLike(storyId: currentStory.id)
-            if let interaction = try? await storiesService.getInteraction(forStoryId: currentStory.id) {
-                interactions[currentStory.id] = interaction
-            }
-            print("✅ [StoryViewer] Toggled like for story \(currentStory.id)")
+            try await storiesService.toggleStoryLike(storyId: story.id)
+            interaction = try? await storiesService.getInteraction(forStoryId: story.id)
+            print("✅ [StoryViewer] Toggled like for story \(story.id)")
         } catch {
             print("❌ [StoryViewer] Error toggling like: \(error)")
         }
     }
     
     func markCurrentAsSeen() async {
+        guard let story = currentStory else { return }
         do {
-            try await storiesService.markStoryAsSeen(storyId: currentStory.id)
-            if let interaction = try? await storiesService.getInteraction(forStoryId: currentStory.id) {
-                interactions[currentStory.id] = interaction
-            }
-            print("👁️ [StoryViewer] Marked story \(currentStory.id) as seen")
+            try await storiesService.markStoryAsSeen(storyId: story.id)
+            interaction = try? await storiesService.getInteraction(forStoryId: story.id)
+            print("👁️ [StoryViewer] Marked story \(story.id) as seen")
         } catch {
             print("❌ [StoryViewer] Error marking as seen: \(error)")
-        }
-    }
-    
-    private func loadInteractions() async {
-        for story in stories {
-            if let interaction = try? await storiesService.getInteraction(forStoryId: story.id) {
-                interactions[story.id] = interaction
-            }
         }
     }
     

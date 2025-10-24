@@ -24,9 +24,14 @@ struct StoryViewerView: View {
         GeometryReader { geometry in
             ZStack {
                 backgroundLayer
-                storyPagerLayer
-                navigationTapZonesLayer
-                overlayLayer
+                
+                if viewModel.isLoading || viewModel.currentStory == nil {
+                    loadingLayer
+                } else {
+                    storyContentLayer
+                    navigationTapZonesLayer
+                    overlayLayer
+                }
             }
             .offset(y: dragOffset)
             .gesture(dismissSwipeGesture)
@@ -36,6 +41,8 @@ struct StoryViewerView: View {
         .navigationBarHidden(true)
         .statusBar(hidden: true)
         .task {
+            // Set callback for auto-advance to next story
+            viewModel.onStoryComplete = handleNext
             await viewModel.startViewing()
         }
         .onDisappear {
@@ -49,25 +56,31 @@ struct StoryViewerView: View {
         Color.black.edgesIgnoringSafeArea(.all)
     }
     
-    private var storyPagerLayer: some View {
-        StoryPager(
-            stories: viewModel.stories,
-            currentIndex: $viewModel.currentIndex,
-            onIndexChanged: handleStoryIndexChanged
-        )
+    private var loadingLayer: some View {
+        ProgressView()
+            .tint(.white)
+            .scaleEffect(1.5)
+    }
+    
+    private var storyContentLayer: some View {
+        Group {
+            if let story = viewModel.currentStory {
+                StoryContentView(story: story)
+            }
+        }
     }
     
     private var navigationTapZonesLayer: some View {
         NavigationTapZones(
-            onPrevious: viewModel.previousStory,
-            onNext: viewModel.nextStory
+            onPrevious: handlePrevious,
+            onNext: handleNext,
+            hasPrevious: viewModel.previousStoryId != nil,
+            hasNext: viewModel.nextStoryId != nil
         )
     }
     
     private var overlayLayer: some View {
         StoryOverlay(
-            storyCount: viewModel.stories.count,
-            currentIndex: viewModel.currentIndex,
             progress: viewModel.progress,
             currentStory: viewModel.currentStory,
             isLiked: viewModel.isLiked,
@@ -87,7 +100,8 @@ struct StoryViewerView: View {
             }
             .onEnded { value in
                 if value.translation.height > 100 {
-                    router.navigateBack()
+                    // Swipe down dismisses entire story viewer
+                    router.navigateToRoot()
                 }
             }
     }
@@ -104,15 +118,25 @@ struct StoryViewerView: View {
     
     // MARK: - Actions
     
-    private func handleStoryIndexChanged() {
-        viewModel.startAutoAdvance()
-        Task {
-            await viewModel.markCurrentAsSeen()
+    private func handlePrevious() {
+        guard viewModel.previousStoryId != nil else { return }
+        // Just go back in navigation stack
+        router.navigateBack()
+    }
+    
+    private func handleNext() {
+        guard let nextId = viewModel.nextStoryId else {
+            // No more stories, go back to list
+            router.navigateToRoot()
+            return
         }
+        // Push next story onto navigation stack
+        router.navigate(to: StoriesDestination.storyViewer(storyId: nextId))
     }
     
     private func handleClose() {
-        router.navigateBack()
+        // Dismiss entire story viewer and return to list
+        router.navigateToRoot()
     }
     
     private func handleLike() async {
@@ -126,46 +150,31 @@ struct StoryViewerView: View {
     }
 }
 
-// MARK: - Story Pager
-
-private struct StoryPager: View {
-    let stories: [Story]
-    @Binding var currentIndex: Int
-    let onIndexChanged: () -> Void
-    
-    var body: some View {
-        TabView(selection: $currentIndex) {
-            ForEach(stories.indices, id: \.self) { index in
-                StoryContentView(story: stories[index])
-                    .tag(index)
-                    .ignoresSafeArea(.all)
-            }
-        }
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        .ignoresSafeArea(.all)
-        .onChange(of: currentIndex) { oldValue, newValue in
-            if oldValue != newValue {
-                onIndexChanged()
-            }
-        }
-    }
-}
-
 // MARK: - Navigation Tap Zones
 
 private struct NavigationTapZones: View {
     let onPrevious: () -> Void
     let onNext: () -> Void
+    let hasPrevious: Bool
+    let hasNext: Bool
     
     var body: some View {
         HStack(spacing: 0) {
+            // Left tap zone - previous story
             Color.clear
                 .contentShape(Rectangle())
-                .onTapGesture(perform: onPrevious)
+                .onTapGesture {
+                    if hasPrevious {
+                        onPrevious()
+                    }
+                }
             
+            // Right tap zone - next story
             Color.clear
                 .contentShape(Rectangle())
-                .onTapGesture(perform: onNext)
+                .onTapGesture {
+                    onNext()  // Always allow tap - will close if no next story
+                }
         }
     }
 }
@@ -173,26 +182,26 @@ private struct NavigationTapZones: View {
 // MARK: - Story Overlay
 
 private struct StoryOverlay: View {
-    let storyCount: Int
-    let currentIndex: Int
     let progress: Double
-    let currentStory: Story
+    let currentStory: Story?
     let isLiked: Bool
     let onClose: () -> Void
     let onLike: () async -> Void
     
     var body: some View {
         VStack(spacing: 0) {
-            StoryProgressBar(
-                storyCount: storyCount,
-                currentIndex: currentIndex,
-                progress: progress
-            )
+            // Single progress bar for current story
+            ProgressView(value: progress)
+                .tint(.white)
+                .padding(.horizontal, 8)
+                .padding(.top, 8)
             
-            StoryHeaderView(
-                story: currentStory,
-                onClose: onClose
-            )
+            if let story = currentStory {
+                StoryHeaderView(
+                    story: story,
+                    onClose: onClose
+                )
+            }
             
             Spacer()
             
@@ -245,11 +254,7 @@ struct StoryContentView: View {
     NavigationStack {
         StoryViewerView(
             dependencies: .init(
-                startIndex: 0,
-                stories: [
-                    Story(id: 1, userId: 100, userName: "Jessica", userProfileImageURL: URL(string: "https://i.pravatar.cc/300?img=1"), mediaURL: URL(string: "https://picsum.photos/id/237/1080/1920"), createdAt: Date(), duration: 5.0),
-                    Story(id: 2, userId: 101, userName: "Krystina", userProfileImageURL: URL(string: "https://i.pravatar.cc/300?img=5"), mediaURL: URL(string: "https://picsum.photos/id/1025/1080/1920"), createdAt: Date(), duration: 7.0)
-                ],
+                storyId: 1,
                 storiesService: PreviewStoriesService()
             )
         )
@@ -264,5 +269,10 @@ fileprivate actor PreviewStoriesService: StoriesServiceProtocol {
     func markStoryAsSeen(storyId: Int) async throws {}
     func toggleStoryLike(storyId: Int) async throws {}
     func getInteraction(forStoryId storyId: Int) async throws -> StoryInteraction? { nil }
+    func getStory(byId storyId: Int) async throws -> Story? {
+        Story(id: storyId, userId: 100, userName: "Preview User", userProfileImageURL: URL(string: "https://i.pravatar.cc/300?img=1"), mediaURL: URL(string: "https://picsum.photos/id/237/1080/1920"), createdAt: Date(), duration: 5.0)
+    }
+    func getNextStoryId(after storyId: Int) async throws -> Int? { storyId + 1 }
+    func getPreviousStoryId(before storyId: Int) async throws -> Int? { storyId > 1 ? storyId - 1 : nil }
 }
 

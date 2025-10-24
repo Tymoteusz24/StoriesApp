@@ -94,6 +94,56 @@ public actor StoriesService: StoriesServiceProtocol {
         return try await localRepository.getInteraction(forStoryId: storyId)
     }
     
+    // MARK: - Single Story Navigation
+    
+    /// Gets a specific story by ID.
+    /// Reconstructs the story from base stories using the unique ID mapping.
+    public func getStory(byId storyId: Int) async throws -> Story? {
+        // Ensure base stories are loaded
+        if baseStories.isEmpty {
+            baseStories = try await remoteRepository.fetchStories(page: 1, pageSize: pageSize)
+        }
+        
+        guard !baseStories.isEmpty, storyId > 0 else { return nil }
+        
+        // Reverse-engineer which base story this ID maps to
+        let zeroBasedId = storyId - 1  // IDs start at 1
+        let baseIndex = zeroBasedId % baseStories.count
+        let originalStory = baseStories[baseIndex]
+        
+        // Reconstruct the story with the requested ID
+        return Story(
+            id: storyId,
+            userId: originalStory.userId,
+            userName: originalStory.userName,
+            userProfileImageURL: originalStory.userProfileImageURL,
+            mediaURL: originalStory.mediaURL,
+            createdAt: originalStory.createdAt,
+            duration: originalStory.duration
+        )
+    }
+    
+    /// Gets the next story ID after the given ID.
+    /// In this mock implementation, stories can continue infinitely.
+    public func getNextStoryId(after storyId: Int) async throws -> Int? {
+        // Ensure base stories are loaded to validate we have data
+        if baseStories.isEmpty {
+            baseStories = try await remoteRepository.fetchStories(page: 1, pageSize: pageSize)
+        }
+        
+        guard !baseStories.isEmpty else { return nil }
+        
+        // Simply increment the ID (infinite pagination)
+        return storyId + 1
+    }
+    
+    /// Gets the previous story ID before the given ID.
+    /// Returns nil if at the first story.
+    public func getPreviousStoryId(before storyId: Int) async throws -> Int? {
+        guard storyId > 1 else { return nil }
+        return storyId - 1
+    }
+    
     /// Generates paginated stories by repeating base stories with unique IDs.
     /// This is the core mock pagination logic that enables infinite scrolling.
     private func getPaginatedStories() -> [Story] {
