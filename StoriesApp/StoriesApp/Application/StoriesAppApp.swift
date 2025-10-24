@@ -12,6 +12,9 @@ import DomainData
 import Domain
 import Networking
 
+// for now import stmock data
+import DomainDataMock
+
 @main
 struct StoriesAppApp: App {
     
@@ -21,25 +24,28 @@ struct StoriesAppApp: App {
     init() {
         do {
             modelContainer = try ModelContainer(
-                for: UserProfileDBModel.self,
+                for: StoryInteractionDBModel.self,
                 configurations: ModelConfiguration(isStoredInMemoryOnly: false)
             )
         } catch {
             fatalError("Failed to create ModelContainer: \(error)")
         }
         let logger = NoLogger(label: "StoriesApp")
+    
+// don't need api client now
+//        let apiClient = APIClientService(
+//            logger: logger,
+//            configuration: .default
+//        )
         
-        let apiClient = APIClientService (
-            logger: logger,
-            configuration: .default
+        let storiesRemoteRepository =   MockStoriesRemoteRepository()
+        let storiesLocalRepository = StoriesLocalRepository(modelContext: modelContainer.mainContext)
+        let storiesService = StoriesService(
+            remoteRepository: storiesRemoteRepository,
+            localRepository: storiesLocalRepository
         )
         
-        let userProfileService = UserProfileSyncService(
-            apiClient: apiClient,
-            modelContext: modelContainer.mainContext
-        )
-        self.configuration = Configuration(logger: logger,
-                                           userProfileService: userProfileService)
+        self.configuration = Configuration(logger: logger, storiesService: storiesService)
     }
 
     var body: some Scene {

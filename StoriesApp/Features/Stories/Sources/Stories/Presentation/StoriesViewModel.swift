@@ -8,48 +8,93 @@
 import Foundation
 import Domain
 
+@MainActor
 final class StoriesViewModel: ObservableObject {
     
-    let userProfileService: UserProfileSyncServiceProtocol
+   let storiesService: StoriesServiceProtocol
     
-    @Published var profiles: [UserProfile] = []
+    @Published var stories: [Story] = []
+    @Published var interactions: [Int: StoryInteraction] = [:]
     
-    var topProfile: UserProfile? {
-        profiles.first
+    var topStory: Story? {
+        stories.first
     }
     
-    var nextProfile: UserProfile? {
-        guard profiles.count > 1 else {
+    var nextStory: Story? {
+        guard stories.count > 1 else {
             return nil
         }
-        return profiles[1]
+        return stories[1]
     }
     
     struct Depedencies {
-        let userProfileService: UserProfileSyncServiceProtocol
+        let storiesService: StoriesServiceProtocol
     }
     
     init(dependencies: Depedencies) {
-        self.userProfileService = dependencies.userProfileService
+        self.storiesService = dependencies.storiesService
     }
     
-    @MainActor
-    func getCurrentStories() async {
-        // if we have local profiles, use them
-        if let localProfiles = try? await userProfileService.getLocalProfiles(), !localProfiles.isEmpty {
-            self.profiles = localProfiles
-            print("Using local profiles")
-            return
-        }
-        
-        let profiles = try? await userProfileService.syncProfiles()
-        if let profiles = profiles {
-            self.profiles = profiles
+    func loadInitialStories() async {
+        do {
+            let newStories = try await storiesService.fetchInitialStories()
+            stories = newStories
+            await loadInteractions()
+        } catch {
+            print("Error loading stories: \(error)")
         }
     }
     
-    func removeTopProfile() {
-        guard !profiles.isEmpty else { return }
-        profiles.removeFirst()
+    func loadMoreStories() async {
+        do {
+            let newStories = try await storiesService.fetchNextPage()
+            stories.append(contentsOf: newStories)
+            await loadInteractions()
+        } catch {
+            print("Error loading more stories: \(error)")
+        }
+    }
+    
+    func removeTopStory() {
+        guard !stories.isEmpty else { return }
+        stories.removeFirst()
+    }
+    
+    func markStoryAsSeen(_ story: Story) async {
+        do {
+            try await storiesService.markStoryAsSeen(storyId: story.id)
+            if let interaction = try? await storiesService.getInteraction(forStoryId: story.id) {
+                interactions[story.id] = interaction
+            }
+        } catch {
+            print("Error marking story as seen: \(error)")
+        }
+    }
+    
+    func toggleLike(_ story: Story) async {
+        do {
+            try await storiesService.toggleStoryLike(storyId: story.id)
+            if let interaction = try? await storiesService.getInteraction(forStoryId: story.id) {
+                interactions[story.id] = interaction
+            }
+        } catch {
+            print("Error toggling like: \(error)")
+        }
+    }
+    
+    func isSeen(_ story: Story) -> Bool {
+        interactions[story.id]?.isSeen ?? false
+    }
+    
+    func isLiked(_ story: Story) -> Bool {
+        interactions[story.id]?.isLiked ?? false
+    }
+    
+    private func loadInteractions() async {
+        for story in stories {
+            if let interaction = try? await storiesService.getInteraction(forStoryId: story.id) {
+                interactions[story.id] = interaction
+            }
+        }
     }
 }

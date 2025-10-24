@@ -10,7 +10,7 @@ import Domain
 import DomainData
 
 /// Mock implementation of StoriesRemoteRepository for testing and previews
-public final actor MockStoriesRemoteRepository {
+public final actor MockStoriesRemoteRepository: StoriesRemoteRepositoryProtocol {
     private let shouldFail: Bool
     private let delay: TimeInterval
     

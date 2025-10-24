@@ -30,7 +30,7 @@ import SwiftData
 ///
 /// **Note:** In a production environment, this would be replaced with real server-side pagination.
 public actor StoriesService: StoriesServiceProtocol {
-    private let remoteRepository: StoriesRemoteRepository
+    private let remoteRepository: StoriesRemoteRepositoryProtocol
     private let localRepository: StoriesLocalRepository
     
     private var baseStories: [Story] = []
@@ -38,7 +38,7 @@ public actor StoriesService: StoriesServiceProtocol {
     private let pageSize = 20
     
     public init(
-        remoteRepository: StoriesRemoteRepository,
+        remoteRepository: StoriesRemoteRepositoryProtocol,
         localRepository: StoriesLocalRepository
     ) {
         self.remoteRepository = remoteRepository

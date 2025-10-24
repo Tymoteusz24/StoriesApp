@@ -17,7 +17,7 @@ struct StoriesTabCoordinator: View {
     
     var body: some View {
         NavigationStack(path: $router.navPath) {
-            StoriesCoordinator(depedencies: .init(userProfileService: configuration.userProfileService))
+            StoriesCoordinator(depedencies: .init(storiesService: configuration.storiesService))
         }.environmentObject(router)
     }
 }

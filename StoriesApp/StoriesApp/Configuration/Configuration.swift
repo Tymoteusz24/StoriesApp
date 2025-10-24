@@ -10,13 +10,15 @@ import Combine
 import Logger
 import DomainData
 
+@MainActor
 class Configuration: ObservableObject {
     
     let logger: ILogger
-    let userProfileService: UserProfileSyncService
-    init(logger: ILogger, userProfileService: UserProfileSyncService) {
+    nonisolated(unsafe) let storiesService: StoriesService
+    
+    init(logger: ILogger, storiesService: StoriesService) {
         self.logger = logger
-        self.userProfileService = userProfileService
+        self.storiesService = storiesService
     }
 }
 

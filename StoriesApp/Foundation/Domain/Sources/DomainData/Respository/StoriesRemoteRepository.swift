@@ -9,7 +9,11 @@ import Foundation
 import Domain
 import Networking
 
-public final actor StoriesRemoteRepository {
+public protocol StoriesRemoteRepositoryProtocol: Sendable {
+    func fetchStories(page: Int, pageSize: Int) async throws -> [Story]
+}
+
+public final actor StoriesRemoteRepository: StoriesRemoteRepositoryProtocol {
     private let apiClient: IAPIClientService
     private let mapper: StoriesMapper
     

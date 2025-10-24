@@ -10,7 +10,7 @@ import Domain
 import Router
 
 enum StoriesDestination: Hashable {
-    case profileDetail(UserProfile)
+    case storyDetail(Story)
 }
 
 public struct StoriesCoordinator: View {
@@ -23,15 +23,15 @@ public struct StoriesCoordinator: View {
     }
     
     public var body: some View {
-        StoriesView(dependencies: .init(userProfileService: depedencies.userProfileService))
+        StoriesView(dependencies: .init(storiesService: depedencies.storiesService))
     }
 }
 
 public extension StoriesCoordinator {
     struct Depedencies {
-        let userProfileService: UserProfileSyncServiceProtocol
-       public init(userProfileService: UserProfileSyncServiceProtocol) {
-            self.userProfileService = userProfileService
+        let storiesService: StoriesServiceProtocol
+       public init(storiesService: StoriesServiceProtocol) {
+            self.storiesService = storiesService
        }
     }
 }

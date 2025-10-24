@@ -10,35 +10,30 @@ import Networking
 
 /// API endpoints for the stories app
 public enum StoriesAPIEndpoint {
-    case getProfiles
     case getStories(page: Int, pageSize: Int)
 }
 
 extension StoriesAPIEndpoint: EndpointType {
     public var baseUrl: URL? {
-        URL(string: "https://raw.githubusercontent.com")
+        URL(string: "https://somedomain.com")
     }
     
     public var path: String {
         switch self {
-        case .getProfiles:
-            return "/downapp/sample/main/sample.json"
         case .getStories:
-            return "/downapp/sample/main/stories.json"
+            return "/api/stories"
         }
     }
     
     public var httpMethod: HTTPMethod {
         switch self {
-        case .getProfiles, .getStories:
+        case .getStories:
             return .get
         }
     }
     
     public var urlQueries: [String: String]? {
         switch self {
-        case .getProfiles:
-            return nil
         case let .getStories(page, pageSize):
             return [
                 "page": "\(page)",
@@ -49,7 +44,7 @@ extension StoriesAPIEndpoint: EndpointType {
     
     public var headers: [String: String]? {
         switch self {
-        case .getProfiles, .getStories:
+        case .getStories:
             return [
                 "Accept": "application/json",
                 "Content-Type": "application/json"
@@ -59,7 +54,7 @@ extension StoriesAPIEndpoint: EndpointType {
     
     public var bodyParameters: BodyParameter? {
         switch self {
-        case .getProfiles, .getStories:
+        case .getStories:
             return nil
         }
     }

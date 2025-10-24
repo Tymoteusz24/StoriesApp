@@ -27,9 +27,5 @@ struct StoriesView: View {
 }
 
 #Preview {
-    TabView {
-        StoriesView(dependencies: .init(userProfileService: MockUserProfileSyncService.preview))
-    }
-    .background(.black)
-    
+    Text("Preview placeholder")
 }
