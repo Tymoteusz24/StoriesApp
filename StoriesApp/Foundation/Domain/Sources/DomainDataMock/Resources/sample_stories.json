@@ -1,0 +1,93 @@
+[
+  {
+    "story_id": 1,
+    "user_id": 13620229,
+    "user_name": "Jessica",
+    "user_profile_image_url": "https://i.pravatar.cc/300?img=1",
+    "media_url": "https://picsum.photos/id/237/1080/1920",
+    "created_at": "2025-10-24T10:30:00Z",
+    "duration": 5.0
+  },
+  {
+    "story_id": 2,
+    "user_id": 13620230,
+    "user_name": "Krystina",
+    "user_profile_image_url": "https://i.pravatar.cc/300?img=5",
+    "media_url": "https://picsum.photos/id/1025/1080/1920",
+    "created_at": "2025-10-24T11:15:00Z",
+    "duration": 7.0
+  },
+  {
+    "story_id": 3,
+    "user_id": 13620231,
+    "user_name": "Taty",
+    "user_profile_image_url": "https://i.pravatar.cc/300?img=9",
+    "media_url": "https://picsum.photos/id/1039/1080/1920",
+    "created_at": "2025-10-24T12:00:00Z",
+    "duration": 6.0
+  },
+  {
+    "story_id": 4,
+    "user_id": 13620232,
+    "user_name": "Makeyouhot",
+    "user_profile_image_url": "https://i.pravatar.cc/300?img=10",
+    "media_url": "https://picsum.photos/id/1043/1080/1920",
+    "created_at": "2025-10-24T13:45:00Z",
+    "duration": 5.5
+  },
+  {
+    "story_id": 5,
+    "user_id": 13620233,
+    "user_name": "Sarah",
+    "user_profile_image_url": "https://i.pravatar.cc/300?img=16",
+    "media_url": "https://picsum.photos/id/1059/1080/1920",
+    "created_at": "2025-10-24T14:20:00Z",
+    "duration": 8.0
+  },
+  {
+    "story_id": 6,
+    "user_id": 13620234,
+    "user_name": "Megan",
+    "user_profile_image_url": "https://i.pravatar.cc/300?img=20",
+    "media_url": "https://picsum.photos/id/106/1080/1920",
+    "created_at": "2025-10-24T15:10:00Z",
+    "duration": 6.5
+  },
+  {
+    "story_id": 7,
+    "user_id": 13620235,
+    "user_name": "Delilah",
+    "user_profile_image_url": "https://i.pravatar.cc/300?img=23",
+    "media_url": "https://picsum.photos/id/1074/1080/1920",
+    "created_at": "2025-10-24T16:00:00Z",
+    "duration": 7.5
+  },
+  {
+    "story_id": 8,
+    "user_id": 13620236,
+    "user_name": "Lizzz",
+    "user_profile_image_url": "https://i.pravatar.cc/300?img=26",
+    "media_url": "https://picsum.photos/id/1084/1080/1920",
+    "created_at": "2025-10-24T17:30:00Z",
+    "duration": 5.0
+  },
+  {
+    "story_id": 9,
+    "user_id": 13620237,
+    "user_name": "Nini",
+    "user_profile_image_url": "https://i.pravatar.cc/300?img=29",
+    "media_url": "https://picsum.photos/id/119/1080/1920",
+    "created_at": "2025-10-24T18:15:00Z",
+    "duration": 6.0
+  },
+  {
+    "story_id": 10,
+    "user_id": 13620238,
+    "user_name": "Sugar",
+    "user_profile_image_url": "https://i.pravatar.cc/300?img=32",
+    "media_url": "https://picsum.photos/id/129/1080/1920",
+    "created_at": "2025-10-24T19:00:00Z",
+    "duration": 7.0
+  }
+]
+

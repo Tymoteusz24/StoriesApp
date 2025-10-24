@@ -1,0 +1,18 @@
+strings:
+  inputs:
+    - ../../Foundation/SystemDesign/Sources/SystemDesign/Supporting/en.lproj/Localizable.strings
+  outputs:
+    - templateName: structured-swift5
+      output: ../../Foundation/SystemDesign/Sources/SystemDesign/Generated/Strings.swift
+      params:
+        publicAccess: true
+
+xcassets:
+  inputs:
+    - ../../Foundation/SystemDesign/Sources/SystemDesign/Supporting/Images.xcassets
+    - ../../Foundation/SystemDesign/Sources/SystemDesign/Supporting/Colors.xcassets
+  outputs:
+    - templateName: swift5
+      output: ../../Foundation/SystemDesign/Sources/SystemDesign/Generated/Assets.swift
+      params:
+        publicAccess: true
