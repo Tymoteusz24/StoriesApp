@@ -16,6 +16,7 @@ final class StoriesViewModel: ObservableObject {
     @Published var stories: [Story] = []
     @Published var interactions: [Int: StoryInteraction] = [:]
     @Published var isLoadingMore: Bool = false
+    @Published var isLoadingInitial: Bool = false
     
     var topStory: Story? {
         stories.first
@@ -37,6 +38,7 @@ final class StoriesViewModel: ObservableObject {
     }
     
     func loadInitialStories() async {
+        isLoadingInitial = true
         print("📱 [StoriesViewModel] Loading initial stories...")
         do {
             let newStories = try await storiesService.fetchInitialStories()
@@ -47,6 +49,7 @@ final class StoriesViewModel: ObservableObject {
         } catch {
             print("❌ [StoriesViewModel] Error loading stories: \(error)")
         }
+        isLoadingInitial = false
     }
     
     func loadMoreStories() async {
