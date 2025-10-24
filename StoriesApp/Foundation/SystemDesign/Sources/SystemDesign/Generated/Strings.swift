@@ -14,8 +14,8 @@ public enum L10n {
   public static let activityTabTitle = L10n.tr("Localizable", "activityTabTitle", fallback: "Activity")
   /// Stories App
   public static let appName = L10n.tr("Localizable", "appName", fallback: "Stories App")
-  /// Feed
-  public static let feedTabTitle = L10n.tr("Localizable", "feedTabTitle", fallback: "Feed")
+  /// Stories
+  public static let feedTabTitle = L10n.tr("Localizable", "feedTabTitle", fallback: "Stories")
   /// en
   public static let systemLanguage = L10n.tr("Localizable", "systemLanguage", fallback: "en")
 }

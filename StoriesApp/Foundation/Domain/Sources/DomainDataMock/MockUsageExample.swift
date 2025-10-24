@@ -15,7 +15,7 @@ import Domain
 
 /*
  
- struct FeedView: View {
+ struct StoriesView: View {
      let syncService: UserProfileSyncServiceProtocol
      @State private var profiles: [UserProfile] = []
      @State private var isLoading = false
@@ -44,27 +44,27 @@ import Domain
  // MARK: - Previews
 
  #Preview("Default - With Data") {
-     FeedView(syncService: MockUserProfileSyncService.preview)
+     StoriesView(syncService: MockUserProfileSyncService.preview)
  }
 
  #Preview("Loading State - Slow Network") {
-     FeedView(syncService: MockUserProfileSyncService.previewSlowNetwork)
+     StoriesView(syncService: MockUserProfileSyncService.previewSlowNetwork)
  }
 
  #Preview("Offline Mode - Cached Data") {
-     FeedView(syncService: MockUserProfileSyncService.previewOffline)
+     StoriesView(syncService: MockUserProfileSyncService.previewOffline)
  }
 
  #Preview("Error State") {
-     FeedView(syncService: MockUserProfileSyncService.previewError)
+     StoriesView(syncService: MockUserProfileSyncService.previewError)
  }
 
  #Preview("Empty State") {
-     FeedView(syncService: MockUserProfileSyncService.previewEmpty)
+     StoriesView(syncService: MockUserProfileSyncService.previewEmpty)
  }
 
  #Preview("Many Profiles - Scrolling") {
-     FeedView(syncService: MockUserProfileSyncService.previewManyProfiles)
+     StoriesView(syncService: MockUserProfileSyncService.previewManyProfiles)
  }
  
  */
@@ -91,7 +91,7 @@ import Domain
          hasLocalData: true
      )
      
-     FeedView(syncService: mock)
+     StoriesView(syncService: mock)
  }
  
  */
@@ -100,7 +100,7 @@ import Domain
 
 /*
  
- struct FeedViewWithRefresh: View {
+ struct StoriesViewWithRefresh: View {
      let syncService: MockUserProfileSyncService
      @State private var profiles: [UserProfile] = []
      
@@ -138,7 +138,7 @@ import Domain
      Task {
          await mock.configureForOffline()
      }
-     return FeedViewWithRefresh(syncService: mock)
+     return StoriesViewWithRefresh(syncService: mock)
  }
  
  */
@@ -148,7 +148,7 @@ import Domain
 /*
  
  @Observable
- final class FeedCoordinator {
+ final class StoriesCoordinator {
      private let syncService: UserProfileSyncServiceProtocol
      var profiles: [UserProfile] = []
      var isLoading = false
@@ -173,11 +173,11 @@ import Domain
      }
  }
 
- struct FeedViewWithCoordinator: View {
-     @State private var coordinator: FeedCoordinator
+ struct StoriesViewWithCoordinator: View {
+     @State private var coordinator: StoriesCoordinator
      
      init(syncService: UserProfileSyncServiceProtocol) {
-         _coordinator = State(initialValue: FeedCoordinator(syncService: syncService))
+         _coordinator = State(initialValue: StoriesCoordinator(syncService: syncService))
      }
      
      var body: some View {
@@ -187,7 +187,7 @@ import Domain
  }
 
  #Preview("With Coordinator") {
-     FeedViewWithCoordinator(syncService: MockUserProfileSyncService.preview)
+     StoriesViewWithCoordinator(syncService: MockUserProfileSyncService.preview)
  }
  
  */
@@ -206,7 +206,7 @@ import Domain
          await mock.configureForOffline()
      }
      
-     return FeedView(syncService: mock)
+     return StoriesView(syncService: mock)
  }
 
  #Preview("Gradual Loading") {
@@ -233,7 +233,7 @@ import Domain
          }
      }
      
-     return FeedView(syncService: mock)
+     return StoriesView(syncService: mock)
  }
  
  */

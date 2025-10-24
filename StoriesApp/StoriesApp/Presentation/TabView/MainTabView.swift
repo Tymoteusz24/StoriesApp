@@ -15,7 +15,7 @@ struct MainTabView: View {
     @ObservedObject private var router = Router()
     var body: some View {
         TabView(selection: $selection) {
-            FeedTabCoordinator()
+            StoriesTabCoordinator()
                 .tabItem {
                     Image(systemName: "person.circle")
                         .foregroundStyle(Color.black)

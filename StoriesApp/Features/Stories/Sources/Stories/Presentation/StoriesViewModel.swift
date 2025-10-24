@@ -1,6 +1,6 @@
 //
-//  FeedViewModel.swift
-//  Feed
+//  StoriesViewModel.swift
+//  Stories
 //
 //  Created by Tymoteusz Pasieka on 10/22/25.
 //
@@ -8,7 +8,7 @@
 import Foundation
 import Domain
 
-final class FeedViewModel: ObservableObject {
+final class StoriesViewModel: ObservableObject {
     
     let userProfileService: UserProfileSyncServiceProtocol
     
@@ -34,7 +34,7 @@ final class FeedViewModel: ObservableObject {
     }
     
     @MainActor
-    func getCurrentFeed() async {
+    func getCurrentStories() async {
         // if we have local profiles, use them
         if let localProfiles = try? await userProfileService.getLocalProfiles(), !localProfiles.isEmpty {
             self.profiles = localProfiles
