@@ -10,7 +10,7 @@ import Domain
 import Router
 
 enum StoriesDestination: Hashable {
-    case storyDetail(Story)
+    case storyViewer(startIndex: Int, stories: [Story])
 }
 
 public struct StoriesCoordinator: View {
@@ -26,10 +26,11 @@ public struct StoriesCoordinator: View {
         StoriesView(dependencies: .init(storiesService: depedencies.storiesService))
             .navigationDestination(for: StoriesDestination.self) { destination in
                 switch destination {
-                case .storyDetail(let story):
-                    StoryDetailView(
+                case .storyViewer(let startIndex, let stories):
+                    StoryViewerView(
                         dependencies: .init(
-                            story: story,
+                            startIndex: startIndex,
+                            stories: stories,
                             storiesService: depedencies.storiesService
                         )
                     )
