@@ -185,6 +185,5 @@ All easily addressable with more time or real backend.
 ---
 
 **Developer**: Tymoteusz Pasieka  
-**Project**: BeReal Technical Assessment  
 **Date**: October 2025
 
