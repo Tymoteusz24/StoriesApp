@@ -2,7 +2,7 @@
 //  StoriesAPIEndpoint.swift
 //  DomainData
 //
-//  Created by Tymoteusz Pasieka on 10/22/25.
+//  Created by Tymoteusz Pasieka on 10/24/25.
 //
 
 import Foundation
