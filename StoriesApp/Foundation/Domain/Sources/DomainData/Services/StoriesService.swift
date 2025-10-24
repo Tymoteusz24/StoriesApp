@@ -50,16 +50,6 @@ public actor StoriesService: StoriesServiceProtocol {
     public func fetchInitialStories() async throws -> [Story] {
         if baseStories.isEmpty {
             baseStories = try await remoteRepository.fetchStories(page: 1, pageSize: pageSize)
-        } else {
-            // Simulate delay for refresh
-            try await Task.sleep(for: .seconds(1.5))
-            
-            // Simulate random network errors (40% chance) when refreshing
-            if Double.random(in: 0...1) < 0.4 {
-                throw NSError(domain: "StoriesService", code: -1, userInfo: [
-                    NSLocalizedDescriptionKey: "Network connection failed. Please try again."
-                ])
-            }
         }
         
         currentPage = 0
@@ -69,18 +59,12 @@ public actor StoriesService: StoriesServiceProtocol {
     /// Fetches the next page of stories with unique IDs.
     /// Uses mock pagination by cycling through base stories with modified IDs.
     public func fetchNextPage() async throws -> [Story] {
+        // Always call remote repository to simulate network request with potential errors
+        _ = try await remoteRepository.fetchStories(page: currentPage + 1, pageSize: pageSize)
+        
+        // Use cached base stories for actual pagination
         if baseStories.isEmpty {
             baseStories = try await remoteRepository.fetchStories(page: 1, pageSize: pageSize)
-        }
-        
-        // Simulate network delay and random errors for pagination
-        try await Task.sleep(for: .seconds(1.5))
-        
-        // Simulate random network errors (40% chance)
-        if Double.random(in: 0...1) < 0.4 {
-            throw NSError(domain: "StoriesService", code: -1, userInfo: [
-                NSLocalizedDescriptionKey: "Failed to load more stories."
-            ])
         }
         
         currentPage += 1

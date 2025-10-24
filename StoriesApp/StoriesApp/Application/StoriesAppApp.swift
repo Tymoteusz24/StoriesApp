@@ -12,7 +12,7 @@ import DomainData
 import Domain
 import Networking
 
-// for now import stmock data
+// for now import stock domain data
 import DomainDataMock
 
 @main
@@ -38,7 +38,7 @@ struct StoriesAppApp: App {
 //            configuration: .default
 //        )
         
-        let storiesRemoteRepository = MockStoriesRemoteRepository(delay: 1.5, randomErrorRate: 0.4)
+        let storiesRemoteRepository = MockStoriesRemoteRepository(delay: 1.5, randomErrorRate: 0.2)
         let storiesLocalRepository = StoriesLocalRepository(modelContext: modelContainer.mainContext)
         let storiesService = StoriesService(
             remoteRepository: storiesRemoteRepository,
