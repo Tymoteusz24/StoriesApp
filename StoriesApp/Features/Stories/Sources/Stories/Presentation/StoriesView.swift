@@ -44,11 +44,16 @@ struct StoriesView: View {
                 } else {
                     // Show actual stories
                     ForEach(viewModel.stories) { story in
-                        StoryRowView(
-                            story: story,
-                            isSeen: viewModel.isSeen(story),
-                            isLiked: viewModel.isLiked(story)
-                        )
+                        Button(action: {
+                            router.navigate(to: StoriesDestination.storyDetail(story))
+                        }) {
+                            StoryRowView(
+                                story: story,
+                                isSeen: viewModel.isSeen(story),
+                                isLiked: viewModel.isLiked(story)
+                            )
+                        }
+                        .buttonStyle(PlainButtonStyle())
                         .id("story-\(story.id)")
                         .onAppear {
                             if story.id == viewModel.stories.last?.id {

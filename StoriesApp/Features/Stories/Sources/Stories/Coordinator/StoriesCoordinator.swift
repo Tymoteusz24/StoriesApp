@@ -24,6 +24,17 @@ public struct StoriesCoordinator: View {
     
     public var body: some View {
         StoriesView(dependencies: .init(storiesService: depedencies.storiesService))
+            .navigationDestination(for: StoriesDestination.self) { destination in
+                switch destination {
+                case .storyDetail(let story):
+                    StoryDetailView(
+                        dependencies: .init(
+                            story: story,
+                            storiesService: depedencies.storiesService
+                        )
+                    )
+                }
+            }
     }
 }
 
